@@ -21,6 +21,11 @@ module.exports = generator.Base.extend({
     this.log('Modifying package.json');
 
     var firebaseAppName = this.props.name;
+
+    // force writing to package.json so the user isn’t prompted
+    this.conflicter.force = true;
+
+    // update package.json
     this.fs.extendJSON(this.pkgPath, {
       donejs: {
         deploy: {
@@ -51,5 +56,7 @@ module.exports = generator.Base.extend({
         }
       }
     });
+
+    this.log('Finished modifying package.json');
   }
 });
