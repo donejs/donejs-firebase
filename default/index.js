@@ -2,11 +2,7 @@ var generator = require('yeoman-generator');
 
 module.exports = generator.Base.extend({
   initializing: function () {
-    this.pkg = this.fs.readJSON(this.destinationPath('package.json'), {});
-    
-    this.files = [
-      'file.js'
-    ];
+    this.pkgPath = this.destinationPath('package.json');
   },
 
   prompting: function () {
@@ -15,19 +11,45 @@ module.exports = generator.Base.extend({
     this.prompt([{
       type    : 'input',
       name    : 'name',
-      message : 'What is the name of the file?'
+      message : 'What is the name of your Firebase app?'
     }]).then(function (answers) {
       this.props = answers;
       done();
     }.bind(this));
   },
   writing: function () {
-    this.log('Copying file to ' + this.destinationPath(this.props.name + '.js'));
-    
-    this.fs.copyTpl(
-			this.templatePath('file.js'),
-			this.destinationPath(this.props.name + '.js'),
-			this.props
-		);
+    this.log('Modifying package.json');
+
+    var firebaseAppName = this.props.name;
+    this.fs.extendJSON(this.pkgPath, {
+      donejs: {
+        deploy: {
+          root: 'dist',
+          services: {
+            production: {
+              type: 'firebase',
+              config: {
+                firebase: firebaseAppName,
+                public: './dist',
+                headers: [{
+                  source: '/**',
+                  headers: [{
+                    key: 'Access-Control-Allow-Origin',
+                    value: '*'
+                  }]
+                }]
+              }
+            }
+          }
+        }
+      },
+      system: {
+        envs: {
+          'server-production': {
+            renderingBaseURL: 'https://' + firebaseAppName + '.firebaseapp.com/'
+          }
+        }
+      }
+    });
   }
 });
