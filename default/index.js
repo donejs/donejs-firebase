@@ -12,7 +12,7 @@ module.exports = generator.Base.extend({
       type    : 'input',
       name    : 'name',
       message : 'What is the name of your Firebase app?'
-    }], function (answers) {
+    }]).then(function (answers) {
       this.props = answers;
       done();
     }.bind(this));
