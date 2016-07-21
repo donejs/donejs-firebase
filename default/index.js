@@ -3,6 +3,8 @@ var generator = require('yeoman-generator');
 module.exports = generator.Base.extend({
   initializing: function () {
     this.pkgPath = this.destinationPath('package.json');
+    this.firebaseJsonPath = this.destinationPath('firebase.json');
+    this.firebaseRc = this.destinationPath('.firebaserc');
   },
 
   prompting: function () {
@@ -17,6 +19,11 @@ module.exports = generator.Base.extend({
       done();
     }.bind(this));
   },
+
+  installingFirebase: function () {
+    this.npmInstall(['firebase-tools'], { saveDev: true });
+  },
+
   writing: function () {
     this.log('Modifying package.json');
 
@@ -27,26 +34,9 @@ module.exports = generator.Base.extend({
 
     // update package.json
     this.fs.extendJSON(this.pkgPath, {
-      donejs: {
-        deploy: {
-          root: 'dist',
-          services: {
-            production: {
-              type: 'firebase',
-              config: {
-                firebase: firebaseAppName,
-                public: './dist',
-                headers: [{
-                  source: '/**',
-                  headers: [{
-                    key: 'Access-Control-Allow-Origin',
-                    value: '*'
-                  }]
-                }]
-              }
-            }
-          }
-        }
+      scripts: {
+        deploy: "firebase deploy",
+        "deploy:ci": "firebase deploy --token \"$FIREBASE_TOKEN\""
       },
       system: {
         envs: {
@@ -54,6 +44,30 @@ module.exports = generator.Base.extend({
             renderingBaseURL: 'https://' + firebaseAppName + '.firebaseapp.com/'
           }
         }
+      }
+    });
+
+    this.fs.extendJSON(this.firebaseJsonPath, {
+      hosting: {
+        firebase: firebaseAppName,
+        "public": "./dist",
+        headers: [
+          {
+            source: "/**",
+            headers: [
+              {
+                key: "Access-Control-Allow-Origin",
+                value: "*"
+              }
+            ]
+          }
+        ]
+      }
+    });
+
+    this.fs.extendJSON(this.firebaseRc, {
+      projects: {
+        "default": firebaseAppName
       }
     });
 
