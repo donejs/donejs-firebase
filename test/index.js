@@ -23,26 +23,9 @@ describe('donejs-firebase', function() {
   it('should update package.json with correct configuration', function() {
     assert.file(['package.json']);
     assert.JSONFileContent('package.json', {
-      donejs: {
-        deploy: {
-          root: 'dist',
-          services: {
-            production: {
-              type: 'firebase',
-              config: {
-                firebase: 'firebase-app-name',
-                public: './dist',
-                headers: [{
-                  source: '/**',
-                  headers: [{
-                    key: 'Access-Control-Allow-Origin',
-                    value: '*'
-                  }]
-                }]
-              }
-            }
-          }
-        }
+      scripts: {
+        deploy: "firebase deploy",
+        "deploy:ci": "firebase deploy --token \"$FIREBASE_TOKEN\""
       }
     });
     assert.JSONFileContent('package.json', {
@@ -72,5 +55,35 @@ describe('donejs-firebase', function() {
         npmAlgorithm: 'flat'
       }
     });
+  });
+
+  it('should update firebase.json', function() {
+    assert.file(['firebase.json']);
+    assert.JSONFileContent('firebase.json', {
+      hosting: {
+        firebase: 'firebase-app-name',
+        "public": "./dist",
+        headers: [
+          {
+            source: "/**",
+            headers: [
+              {
+                key: "Access-Control-Allow-Origin",
+                value: "*"
+              }
+            ]
+          }
+        ]
+      }
+    });
+  });
+
+  it('should update .firebaserc', function() {
+     assert.file(['.firebaserc']);
+     assert.JSONFileContent('.firebaserc', {
+      projects: {
+        'default': 'firebase-app-name'
+      }
+     });
   });
 });
