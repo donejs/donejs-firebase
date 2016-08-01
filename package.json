@@ -29,7 +29,7 @@
   },
   "devDependencies": {
     "jshint": "^2.9.2",
-    "mocha": "^2.5.3",
+    "mocha": "^3.0.0",
     "yeoman-assert": "^2.2.1",
     "yeoman-test": "^1.4.0"
   }
