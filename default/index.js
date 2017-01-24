@@ -33,19 +33,25 @@ module.exports = generator.Base.extend({
     this.conflicter.force = true;
 
     // update package.json
-    this.fs.extendJSON(this.pkgPath, {
+    var pkg = require(this.pkgPath);
+    var stealProp = pkg.system ? "system" : "steal";
+
+    var newPkgConfig = {
       scripts: {
         deploy: "firebase deploy",
         "deploy:ci": "firebase deploy --token \"$FIREBASE_TOKEN\""
-      },
-      system: {
-        envs: {
-          'server-production': {
-            renderingBaseURL: 'https://' + firebaseAppName + '.firebaseapp.com/'
-          }
+      }
+    };
+
+    newPkgConfig[stealProp] = {
+      envs: {
+        'server-production': {
+          renderingBaseURL: 'https://' + firebaseAppName + '.firebaseapp.com/'
         }
       }
-    });
+    };
+
+    this.fs.extendJSON(this.pkgPath, newPkgConfig);
 
     this.fs.extendJSON(this.firebaseJsonPath, {
       hosting: {

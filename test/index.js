@@ -29,7 +29,7 @@ describe('donejs-firebase', function() {
       }
     });
     assert.JSONFileContent('package.json', {
-      system: {
+      steal: {
         envs: {
           'server-production': {
             renderingBaseURL: 'https://firebase-app-name.firebaseapp.com/'
@@ -43,7 +43,7 @@ describe('donejs-firebase', function() {
     assert.file(['package.json']);
     assert.JSONFileContent('package.json', {
       name: 'donejs-app',
-      system: {
+      steal: {
         main: 'donejs-app/index.stache!done-autorender',
         directories: {
           lib: 'src'
