@@ -15,16 +15,4 @@ donejs add firebase
 
 ## Developing
 
-To make changes to this generator, clone the repository and install the dependencies
-
-```
-git clone git@github.com:donejs/donejs-firebase.git
-cd donejs-firebase
-npm install
-```
-
-Then you can run the tests with
-
-```
-npm test
-```
+Check out the [contribution guide](CONTRIBUTING.md).
