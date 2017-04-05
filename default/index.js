@@ -13,7 +13,7 @@ module.exports = generator.Base.extend({
     this.prompt([{
       type    : 'input',
       name    : 'name',
-      message : 'What is the name of your Firebase app?'
+      message : 'What is the Project ID of your Firebase app?'
     }]).then(function (answers) {
       this.props = answers;
       done();
