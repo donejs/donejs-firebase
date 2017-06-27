@@ -25,7 +25,7 @@
   ],
   "dependencies": {
     "lodash": "^4.14.1",
-    "yeoman-generator": "^0.24.1"
+    "yeoman-generator": "^1.1.1"
   },
   "devDependencies": {
     "jshint": "^2.9.2",
